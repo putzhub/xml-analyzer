@@ -1,7 +1,7 @@
 //import logo from './logo.svg';
 import './App.css';
 
-function changeHandler(){
+function changeHandler(props){
   ;
 }
 
@@ -9,9 +9,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1>XML Analyzer</h1>
       </header>
       <p>
         < input type="file" name="file" onChange={changeHandler} multiple/>
