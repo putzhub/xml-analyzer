@@ -8,7 +8,7 @@ import FileUpload from "./components/FileUpload";
 TODO:
 
 Establish workflow
-1. Upload xml files
+1. Select xml files
 2. Collect and analyze contents
 3. Display results to user
 */
