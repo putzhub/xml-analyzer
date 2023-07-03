@@ -6,7 +6,6 @@ function FileUpload() {
     //Hold our and manipulate selectedFiles as State
     const [selectedFiles, setSelectedFiles] = useState([]);
   
-    
     //Update which files have been selected
     const handleFileChange = (event) => {
         let files = event.target.files;

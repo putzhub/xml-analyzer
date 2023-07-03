@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 
 class XMLHandler{
     constructor(elements){
         this.elements = elements;
+        this.counts = {};
+        
+        //Count all elements
+        for(let element of this.elements){
+            this.counts[element.tagName] = 
+                (this.counts[element.tagName] || 0) + 1;    //check if null
+        }
     }
     count(){
+        
+
+        /*let element_counts = {};
+        
         for(let element of this.elements){
-            console.log(element);
-        }
+            if(element_counts[element.name]){
+                element_counts[element.name] += 1;
+            } else{
+                element_counts[element.name] = 1;
+            }
+            console.log(element_counts);
+        }*/
     }
 }
 
@@ -15,7 +31,7 @@ function XMLAnalyzer({files}){
     //initialize tools
     const reader = new FileReader();
     const parser = new DOMParser();
-    let XMLTrees = [];
+    let XMLTrees = [];      //change to useState?
 
     //Parse the .xml files
     reader.onload = (event) => {
@@ -25,7 +41,7 @@ function XMLAnalyzer({files}){
         //Select all elements to be analyzed
         XMLTrees.push(new XMLHandler(root.querySelectorAll('*')));
 
-        XMLTrees[0].count();
+        console.log(XMLTrees[0].counts);
     }
 
     //Read the files
