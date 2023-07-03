@@ -41,6 +41,8 @@
   --background-color: #282c34;
   --color: white;
   --link-color: #61dafb;
+  --background-output: #1D1D1D;
+  --color-ouput: #DEDEDE;
 }
 
 body{
@@ -48,6 +50,24 @@ body{
   color: var(--color);
 }
 
-input[type="file"]{
+input[type="file"], button{
   font-size: 2rem;
+  padding: 1rem;
+}
+
+/* classes */
+.file-names{
+  list-style: none;
+  font-family: monospace;
+  line-height: 1.5;
+  text-align: left;
+  background-color: var(--background-output);
+  color: var(--color-ouput);
+  border: 3px solid var(--color);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.file-names li{
+  margin: 1rem;
 }
