@@ -17,14 +17,43 @@ background-color: var(--background-output);
 border-radius: 8px;
 `;
 
+const TemplateHeader = `
+padding: var(--default-padding);
+margin: 0;
+font-family: monospace;
+border-radius: var(--default-border-radius);
+color: var(--background-color);
+`
+
+const EntryHeader = styled.h3`
+${TemplateHeader}
+background-color: var(--color-contrast);
+`
+
+const TagHeader = styled.h4`
+${TemplateHeader}
+background-color: var(--color-output);
+padding: .5rem;
+`
+
 //Actual analysis of files
 function XMLAnalyzer({file}){
+    function count(tree){
+        let counts = {};
+        
+        //Count total of each type of elements
+        for(let element of tree) {
+            counts[element.tagName] = 
+                (counts[element.tagName] || 0) + 1;    //check if null
+        }
+
+        return counts;
+    }
+
     const [results, setResults ] = useState();
 
-    //Read the actual file with useEffect
+    //Read the actual file with useEffect, pass [file] so it only renders once
     useEffect( () => {
-        let counts = {};
-
         //initialize the tools
         const parser = new DOMParser();
         const reader = new FileReader();
@@ -35,11 +64,8 @@ function XMLAnalyzer({file}){
             const contents = event.target.result;
             const root = parser.parseFromString(contents, 'application/xml');
             
-            //Count all elements
-            for(let element of root.querySelectorAll("*")){
-                counts[element.tagName] = 
-                    (counts[element.tagName] || 0) + 1;    //check if null
-            }
+            //Count the elements
+            let counts = count(root.querySelectorAll("*"));
 
             setResults(counts);
         }
@@ -51,12 +77,21 @@ function XMLAnalyzer({file}){
     //Return the JSX template
     return(
         <ResultEntry>
-            <h3 style={{margin: "0", fontFamily: "monospace"}}>{file.name}</h3>
-            <ul style={{listStyle: "none"}}>
+            <EntryHeader>{file.name}</EntryHeader>
+            <ul style={{listStyle: "none", lineHeight: "1.8"}}>
+                {/*If there's results then iterate through them*/}
                 {results && Object.keys(results).map((key, index) => {
                     return(
-                        <li key={index}>
-                            {'<'}{key}{'>'}: {results[key]}{' '}
+                        <li key={index} style={{marginTop:"var(--default-margin)"}}>
+                            <TagHeader>{key}</TagHeader> 
+                            <ul style={{display:"flex", 
+                                        justifyContent:"space-between",
+                                        listStyle:"none"}}>
+                                <li>
+                                    Total: {results[key]}{' '}
+                                </li>
+                                <li><em>Unique: TBD</em></li>
+                            </ul>
                         </li>
                     );}
                 )}
