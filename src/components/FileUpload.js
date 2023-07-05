@@ -2,14 +2,19 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 
-//components
+//component imports
 import Results from "./Results";
 
+/*    STYLES      */
+//Group file input & selected list
 const InputWrapper = styled.div`
 display: flex;
 justify-content: center;
+align-items: baseline;
 flex-wrap: wrap;
 `
+
+//XML file paths
 const FileNames = styled.ul`
 list-style: none;
 font-family: monospace;
@@ -33,6 +38,8 @@ line-height: .5;
 border: 0;
 border-radius: var(--default-border-radius);
 `
+
+/*      COMPONENTS      */
 function Button({children, toggleText, onClick}){
   const [text, setText] = useState("V");
   return(
@@ -71,7 +78,7 @@ function FileUpload() {
           <div>
             <h2>XML Files 
               <Button 
-                toggleText={">"}
+                toggleText={"<"}
                 //hide the parent's sibling (i.e: FileNames)
                 onClick={ event => {
                   let sibling = event.target.parentNode.nextSibling;

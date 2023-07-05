@@ -6,7 +6,7 @@ font-size: 1.2rem;
 max-width: 100vw;
 display: grid;
 grid-template-columns: repeat(auto-fit, 35rem);
-align-content: center;
+justify-content: center;
 text-align: left;
 `;
 
@@ -52,7 +52,7 @@ function XMLAnalyzer({file}){
     return(
         <ResultEntry>
             <h3 style={{margin: "0", fontFamily: "monospace"}}>{file.name}</h3>
-            <ul>
+            <ul style={{listStyle: "none"}}>
                 {results && Object.keys(results).map((key, index) => {
                     return(
                         <li key={index}>
@@ -65,7 +65,7 @@ function XMLAnalyzer({file}){
     );
 }
 
-//Wrapper & hook to process the xml file contents
+//Wrapper & default export hook to process the xml file contents
 function Results({files}){
     let processed_files = [];
 
