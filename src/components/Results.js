@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { styled } from "styled-components";
 
-/*
-class XMLHandler{
-    constructor(elements){
-        this.filepath = "tbd";
-        this.elements = elements;
-        this.counts = {};
-        
-        //Count all elements
-        for(let element of this.elements){
-            this.counts[element.tagName] = 
-                (this.counts[element.tagName] || 0) + 1;    //check if null
-        }
-    }
-}
-*/
-/* 
+const ResultList = styled.div`
+font-size: 1.2rem;
+display: grid;
+grid-template-columns: repeat(3, auto);
+`
 
-SEE IF THIS HELPS: 
-https://developer.mozilla.org/en-US/docs/Web/API/FileReader/load_event
+const ResultEntry = styled.div`
+margin: var(--default-margin);
+padding: var(--default-padding);
+`
 
-*/
-
-function Results({file}){
+//Actual analysis of files
+function XMLAnalyzer({file}){
     const [results, setResults ] = useState();
 
     useEffect( () => {
@@ -50,9 +41,9 @@ function Results({file}){
         console.log(Object.keys(results));
     }
     return(
-        <>
-            <h3>{file.name}</h3>
-            <div className="file-names">
+        <ResultEntry>
+            <h3 style={{margin: "0"}}>{file.name}</h3>
+            <ul style={{textAlign: "left"}}>
                 {results && Object.keys(results).map((key, index) => {
                     return(
                         <li key={index}>
@@ -61,25 +52,28 @@ function Results({file}){
                         </li>
                     );}
                 )}
-            </div>
-        </>
+            </ul>
+        </ResultEntry>
     );
 }
 
-function XMLAnalyzer({files}){
+//Wrapper & hook to process the xml file contents
+function Results({files}){
     let processed_files = [];
 
     //Create list of Results
     for(let i = 0; i < files.length; i++){
-        processed_files.push(< Results key={i} file={files[i]} />);
+        processed_files.push(< XMLAnalyzer key={i} file={files[i]} />);
     }
 
     return(
         <>
         <h2>Results</h2>
-        {processed_files}
+        <ResultList className="results">
+            {processed_files}
+        </ResultList>
         </>
     );
 }
 
-export default XMLAnalyzer;
+export default Results;

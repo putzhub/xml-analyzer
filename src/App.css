@@ -24,50 +24,23 @@
   color: white;
 }
 
-.App-link {
-  color: var(--link-color);
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 :root{
   --background-color: #282c34;
   --color: white;
   --link-color: #61dafb;
   --background-output: #1D1D1D;
   --color-ouput: #DEDEDE;
+  --default-margin: 1rem;
+  --default-padding: 1rem;
 }
 
 body{
   background-color: var(--background-color);
   color: var(--color);
+  width: 100%;
 }
 
 input[type="file"], button{
   font-size: 2rem;
   padding: 1rem;
-}
-
-/* classes */
-.file-names{
-  list-style: none;
-  font-family: monospace;
-  line-height: 1.5;
-  text-align: left;
-  background-color: var(--background-output);
-  color: var(--color-ouput);
-  border: 3px solid var(--color);
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.file-names li{
-  margin: 1rem;
 }

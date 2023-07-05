@@ -1,6 +1,21 @@
+//libraries & frameworks
 import React, { useState } from "react";
+import { styled } from "styled-components";
 
-import XMLAnalyzer from "./XMLAnalyzer";
+//components
+import Results from "./Results";
+
+const FileNames = styled.ul`
+list-style: none;
+font-family: monospace;
+line-height: 1.5;
+text-align: left;
+background-color: var(--background-output);
+color: var(--color-ouput);
+border: 3px solid var(--color);
+border-radius: 8px;
+padding: var(--default-padding);
+`
 
 function FileUpload() {
     //Hold our and manipulate selectedFiles as State
@@ -24,12 +39,12 @@ function FileUpload() {
         {selectedFiles.length > 0 && (
           <div>
             <h2>XML Files:</h2>
-            <ul className="file-names">
+            <FileNames className="file-names">
               {selectedFiles.map((file, index) => (
                 <li key={index}> {file.name} </li>
               ))}
-            </ul>
-            <XMLAnalyzer files={selectedFiles} />
+            </FileNames>
+            <Results files={selectedFiles} />
           </div>
         )}
       </>
