@@ -1,25 +1,33 @@
 //import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+import { styled } from "styled-components";
 
 import FileUpload from "./components/FileUpload";
+
+const AppHeader = styled.header`
+border-radius: var(--default-border-radius);
+background-color: var(--color-contrast);
+padding: var(--default-padding);
+color: black;
+`
 
 /*
 TODO:
 
 Establish workflow
-1. Select xml files
-2. Collect and analyze contents
-3. Display results to user
+[*] Select xml files 
+[>] Collect and analyze contents
+[>] Display results to user
 */
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>XML Analyzer</h1>
-        <FileUpload />
-      </header>
+    <div style={{textAlign: "center"}}>
+      <AppHeader>
+        <h1 style={{margin: "0"}}>XML Analyzer</h1>
+      </AppHeader>
+      <FileUpload />
     </div>
   );
 }

@@ -51,8 +51,7 @@ function XMLAnalyzer({file}){
                 {results && Object.keys(results).map((key, index) => {
                     return(
                         <li key={index}>
-                            {key}: {results[key]}{' '}
-
+                            {'<'}{key}{'>'}: {results[key]}{' '}
                         </li>
                     );}
                 )}

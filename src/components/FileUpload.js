@@ -13,7 +13,7 @@ text-align: left;
 background-color: var(--background-output);
 color: var(--color-ouput);
 border: 3px solid var(--color);
-border-radius: 8px;
+border-radius: var(--default-border-radius);
 padding: var(--default-padding);
 `
 
@@ -23,7 +23,7 @@ function FileUpload() {
   
     //Template
     return(
-      <>
+      <div>
         <input 
           type="file" 
           name="files"
@@ -47,7 +47,7 @@ function FileUpload() {
             <Results files={selectedFiles} />
           </div>
         )}
-      </>
+      </div>
     );
 }
 

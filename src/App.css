@@ -1,43 +1,26 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  /*min-height: 100vh;*/
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 :root{
   --background-color: #282c34;
   --color: white;
   --link-color: #61dafb;
   --background-output: #1D1D1D;
   --color-ouput: #DEDEDE;
+  --color-contrast: #a9badd;
   --default-margin: 1rem;
   --default-padding: 1rem;
+  --default-border-radius: 8px;
 }
 
 body{
+  /* layout */
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* style */
+  font-size: calc(10px + 2vmin);
   background-color: var(--background-color);
   color: var(--color);
-  width: 100vw;
 }
 
 input[type="file"], button{
