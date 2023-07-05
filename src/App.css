@@ -37,7 +37,7 @@
 body{
   background-color: var(--background-color);
   color: var(--color);
-  width: 100%;
+  width: 100vw;
 }
 
 input[type="file"], button{

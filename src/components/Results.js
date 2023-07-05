@@ -3,14 +3,18 @@ import { styled } from "styled-components";
 
 const ResultList = styled.div`
 font-size: 1.2rem;
+max-width: 100vw;
 display: grid;
-grid-template-columns: repeat(3, auto);
-`
+grid-template-columns: repeat(auto-fill, 35rem);
+text-align: left;
+`;
 
 const ResultEntry = styled.div`
 margin: var(--default-margin);
 padding: var(--default-padding);
-`
+background-color: var(--background-output);
+border-radius: 8px;
+`;
 
 //Actual analysis of files
 function XMLAnalyzer({file}){
@@ -42,8 +46,8 @@ function XMLAnalyzer({file}){
     }
     return(
         <ResultEntry>
-            <h3 style={{margin: "0"}}>{file.name}</h3>
-            <ul style={{textAlign: "left"}}>
+            <h3 style={{margin: "0", fontFamily: "monospace"}}>{file.name}</h3>
+            <ul>
                 {results && Object.keys(results).map((key, index) => {
                     return(
                         <li key={index}>
