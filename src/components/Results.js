@@ -5,7 +5,8 @@ const ResultList = styled.div`
 font-size: 1.2rem;
 max-width: 100vw;
 display: grid;
-grid-template-columns: repeat(auto-fill, 35rem);
+grid-template-columns: repeat(auto-fit, 35rem);
+align-content: center;
 text-align: left;
 `;
 
@@ -20,12 +21,15 @@ border-radius: 8px;
 function XMLAnalyzer({file}){
     const [results, setResults ] = useState();
 
+    //Read the actual file with useEffect
     useEffect( () => {
         let counts = {};
 
+        //initialize the tools
         const parser = new DOMParser();
         const reader = new FileReader();
         
+        //Read the file contents & turn into XML trees
         reader.onload = (event) => {
             //Get contents from the reader passed readAsText(), then parse
             const contents = event.target.result;
@@ -39,11 +43,12 @@ function XMLAnalyzer({file}){
 
             setResults(counts);
         }
+
+        //Read the file once we've defined how
         reader.readAsText(file);
     }, [file]);
-    if(results){
-        console.log(Object.keys(results));
-    }
+
+    //Return the JSX template
     return(
         <ResultEntry>
             <h3 style={{margin: "0", fontFamily: "monospace"}}>{file.name}</h3>
