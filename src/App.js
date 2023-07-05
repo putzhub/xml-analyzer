@@ -17,8 +17,9 @@ TODO:
 
 Establish workflow
 [*] Select xml files 
-[>] Collect and analyze contents
-[>] Display results to user
+[*] Collect and analyze contents
+[*] Display results to user
+[>] Allow user to filter results (i.e: headers)
 */
 
 function App() {

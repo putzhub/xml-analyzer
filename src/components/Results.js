@@ -17,6 +17,10 @@ background-color: var(--background-output);
 border-radius: 8px;
 `;
 
+const TagEntry = styled.li`
+margin-top: var(--default-margin);
+`
+
 const TemplateHeader = `
 padding: var(--default-padding);
 margin: 0;
@@ -30,27 +34,55 @@ ${TemplateHeader}
 background-color: var(--color-contrast);
 `
 
+const EntryContent = styled.ul`
+list-style: none; 
+line-height: 1.8;
+`
+
 const TagHeader = styled.h4`
 ${TemplateHeader}
 background-color: var(--color-output);
 padding: .5rem;
 `
 
+const TagContent = styled.ul`
+display: flex;
+justify-content: space-between;
+list-style: none;
+`
+
 //Actual analysis of files
 function XMLAnalyzer({file}){
-    function count(tree){
+    //Initialize states
+    const [results, setResults ] = useState();
+
+    //Helper functions
+    function count(tree) {
+        //compendium of results
         let counts = {};
+        let unique_sets = {};
+        //categories to return
+        counts["total"] = {};
+        counts["unique"] = {};
         
         //Count total of each type of elements
         for(let element of tree) {
-            counts[element.tagName] = 
-                (counts[element.tagName] || 0) + 1;    //check if null
+            //Totals
+            counts["total"][element.tagName] = 
+                (counts["total"][element.tagName] || 0) + 1;    //check if null
+            
+            //Unique # of elements
+            if(unique_sets[element.tagName] === undefined){
+                unique_sets[element.tagName] = new Set();
+            }
+            unique_sets[element.tagName].add(element.innerHTML.trim());
+            //Keep the unique tally
+            counts["unique"][element.tagName] = 
+                (unique_sets[element.tagName].size || 0) + 1;
         }
 
         return counts;
     }
-
-    const [results, setResults ] = useState();
 
     //Read the actual file with useEffect, pass [file] so it only renders once
     useEffect( () => {
@@ -65,7 +97,8 @@ function XMLAnalyzer({file}){
             const root = parser.parseFromString(contents, 'application/xml');
             
             //Count the elements
-            let counts = count(root.querySelectorAll("*"));
+            let elements = root.querySelectorAll("*");
+            let counts = count(elements);
 
             setResults(counts);
         }
@@ -78,24 +111,23 @@ function XMLAnalyzer({file}){
     return(
         <ResultEntry>
             <EntryHeader>{file.name}</EntryHeader>
-            <ul style={{listStyle: "none", lineHeight: "1.8"}}>
+            <EntryContent>
                 {/*If there's results then iterate through them*/}
-                {results && Object.keys(results).map((key, index) => {
+                {results && Object.keys(results.total).map((key, index) => {
+                    console.assert( //Relies on this assumption
+                        results.total.keys === results.unique.keys, 
+                        "results.total & results.unique differ");
                     return(
-                        <li key={index} style={{marginTop:"var(--default-margin)"}}>
+                        <TagEntry key={index}>
                             <TagHeader>{key}</TagHeader> 
-                            <ul style={{display:"flex", 
-                                        justifyContent:"space-between",
-                                        listStyle:"none"}}>
-                                <li>
-                                    Total: {results[key]}{' '}
-                                </li>
-                                <li><em>Unique: TBD</em></li>
-                            </ul>
-                        </li>
+                            <TagContent>
+                                <li>Total: {results.total[key]}{' '}</li>
+                                <li><em>Unique: {results.unique[key]}{' '}</em></li>
+                            </TagContent>
+                        </TagEntry>
                     );}
                 )}
-            </ul>
+            </EntryContent>
         </ResultEntry>
     );
 }
