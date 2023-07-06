@@ -19,7 +19,7 @@ text-align: left;
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
-    const [ filter, setFilter ] = useState();
+    const [ filter, setFilter ] = useState(RegExp("^(?!.*_|.*~- -|.*~Perform)"));
     //Non-state variables
     let processed_files = [];
 
@@ -32,13 +32,18 @@ function Results({files}){
                                     filter={filter} />);
         }
     };
+    function filterChange(event){
+        setFilter(RegExp(event.target.value));
+        render();
+    }
+
+    //Make sure it renders the first time
     render();
 
-    console.log(filter);
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>
-        <Filter onChange={(e)=>setFilter(e.target.value)}/>
+        <Filter onChange={filterChange}/> {/*/ onChange={(e)=>setFilter(RegExp(e.target.value))}/> */}
         <ResultList>
             {processed_files}
         </ResultList>

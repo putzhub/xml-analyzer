@@ -12,6 +12,10 @@ font-size: 2rem;
 `
 */
 
+//TODO
+//Searchbar pre-populated with header RegExp
+//Filter checkboxes that select which tags to apply the filter to
+
 /*          COMPONENTS          */
 function FilterOptions({onChange}){
     return(
@@ -20,11 +24,10 @@ function FilterOptions({onChange}){
                 type="checkbox" 
                 id="headers" 
                 name="headers" 
-                value="In Progress"
+                value={/_|~_|~- -/g}
                 onChange={onChange}
-                checked
-                disabled/>{" "}
-            <label htmlFor="headers">Remove Headers from Unique Question count</label>
+                />{" "}
+            <label htmlFor="headers">Select Headers</label>
         </div>
     );
 }

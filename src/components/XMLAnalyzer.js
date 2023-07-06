@@ -44,13 +44,13 @@ list-style: none;
 
 /*          COMPONENTS          */
 //Actual analysis of files
-function XMLAnalyzer({file}, {filter}){
+function XMLAnalyzer({file, filter}){
     //Initialize states
     const [results, setResults ] = useState();
     const [xmltree, setXmltree] = useState();
 
     //Helper functions
-    function count(tree=xmltree, filter=(f)=>f) {
+    function count(tree=xmltree) {
         //compendium of results
         let counts = {};
         //categories to return
@@ -60,9 +60,11 @@ function XMLAnalyzer({file}, {filter}){
         let unique_sets = {};
         
         //Count total of each type of elements
-        for(let element of Object.values(tree).filter(filter)) {
+        //For all the value of each element test if it matches the filter
+        for(let element of Object.values(tree).filter((e) => filter.test(e.textContent))) {
             //shorthand
             let tag = element.tagName;
+
             //---Totals---
             counts["total"][tag] = (counts["total"][tag] || 0) + 1;
             
@@ -94,14 +96,15 @@ function XMLAnalyzer({file}, {filter}){
             setXmltree(elements);
             //xmltrees not ready on first pass
             //filter is manually hardcoded for now
-            count(elements, (tag)=>{
+            count(elements);
+            /*count(elements, (tag)=>{
                 //Search if element contains header characters like: _, ~_ ~- -
                 const regex = /_|~_|~- -/g;
                 let header = 
                     tag.tagName === "Question" &&
                     regex.test(tag.textContent);
                 return (!header);
-            });
+            });*/
         }
 
         //Read the file once we've defined how
@@ -117,7 +120,7 @@ function XMLAnalyzer({file}, {filter}){
                 {results && Object.keys(results.total).map((key, index) => {
                     console.assert( //Relies on this assumption
                         results.total.keys === results.unique.keys, 
-                        "results.total & results.unique differ");
+                        "results.total & results.unique - different keys detected");
                     return(
                         <TagEntry key={index}>
                             <TagHeader>{key}</TagHeader> 
