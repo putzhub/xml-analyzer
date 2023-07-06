@@ -43,7 +43,7 @@ function Results({files}){
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>
-        <Filter onChange={filterChange}/> {/*/ onChange={(e)=>setFilter(RegExp(e.target.value))}/> */}
+        <Filter onChange={filterChange}/>
         <ResultList>
             {processed_files}
         </ResultList>

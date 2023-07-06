@@ -20,14 +20,14 @@ font-size: 2rem;
 function FilterOptions({onChange}){
     return(
         <div>
+            <label htmlFor="headers">Search Filter</label>
             <input 
-                type="checkbox" 
+                type="text" 
                 id="headers" 
                 name="headers" 
                 value={/_|~_|~- -/g}
                 onChange={onChange}
                 />{" "}
-            <label htmlFor="headers">Select Headers</label>
         </div>
     );
 }

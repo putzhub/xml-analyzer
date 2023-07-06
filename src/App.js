@@ -20,6 +20,14 @@ Establish workflow
 [*] Collect and analyze contents
 [*] Display results to user
 [>] Allow user to filter results (i.e: headers)
+
+Filter details:
+* Filter should be string search or regex
+* Filters:
+  -Text search
+  -TagName
+  -Regex
+* Allow saving user defined filters?
 */
 
 function App() {

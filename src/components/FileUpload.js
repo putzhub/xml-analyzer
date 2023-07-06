@@ -38,17 +38,16 @@ line-height: .5;
 border: 0;
 border-radius: var(--default-border-radius);
 `
-
 /*      COMPONENTS      */
-function Button({children, toggleText, onClick}){
-  const [text, setText] = useState("V");
+function Button({children, toggleText=children, onClick}){
+  const [label, setLabel] = useState("V");
   return(
     <HeaderButton
       onClick={(event) => {
-        setText((text === toggleText ? children : toggleText ));
+        setLabel((label === toggleText ? children : toggleText ));
         onClick(event);
     }}>
-      {text}
+      {label}
     </HeaderButton>
   );
 }
@@ -79,12 +78,12 @@ function FileUpload() {
             <h2>XML Files 
               <Button 
                 toggleText={"<"}
-                //hide the parent's sibling (i.e: FileNames)
-                onClick={ event => {
+                onClick={ event => {      
                   let sibling = event.target.parentNode.nextSibling;
+                  //hide the parent's sibling (i.e: FileNames)
                   sibling.style.display = (
-                    sibling.style.display === "none" ? "block" : "none");
-                  console.log(event.target.parentNode.nextSibling);
+                    sibling.style.display === "none" ? 
+                      "block" : "none");
                 }}
               >
                 {'V'}
@@ -99,9 +98,7 @@ function FileUpload() {
         )}
         </InputWrapper>
         {selectedFiles.length > 0 && (
-          <>
           <Results files={selectedFiles} />
-          </>
         )}
       </>
     );

@@ -61,7 +61,8 @@ function XMLAnalyzer({file, filter}){
         
         //Count total of each type of elements
         //For all the value of each element test if it matches the filter
-        for(let element of Object.values(tree).filter((e) => filter.test(e.textContent))) {
+        for(let element of Object.values(tree).filter((e) => 
+                                                filter.test(e.textContent))) {
             //shorthand
             let tag = element.tagName;
 
@@ -94,17 +95,8 @@ function XMLAnalyzer({file, filter}){
             //Store the nodelist
             let elements = root.querySelectorAll("*");
             setXmltree(elements);
-            //xmltrees not ready on first pass
-            //filter is manually hardcoded for now
+            //xmltrees not ready on first pass, use elements first.
             count(elements);
-            /*count(elements, (tag)=>{
-                //Search if element contains header characters like: _, ~_ ~- -
-                const regex = /_|~_|~- -/g;
-                let header = 
-                    tag.tagName === "Question" &&
-                    regex.test(tag.textContent);
-                return (!header);
-            });*/
         }
 
         //Read the file once we've defined how
@@ -129,8 +121,8 @@ function XMLAnalyzer({file, filter}){
                                 <li><em>Unique: {results.unique[key]}{' '}</em></li>
                             </TagContent>
                         </TagEntry>
-                    );}
-                )}
+                    );
+                })}
             </EntryContent>
         </ResultEntry>
     );
