@@ -13,6 +13,9 @@ justify-content: center;
 text-align: left;
 `;
 
+// TODO
+// Implement filter as regex instead & pass filters by via through <Filter>
+
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State

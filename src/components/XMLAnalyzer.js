@@ -95,11 +95,11 @@ function XMLAnalyzer({file}, {filter}){
             //xmltrees not ready on first pass
             //filter is manually hardcoded for now
             count(elements, (tag)=>{
+                //Search if element contains header characters like: _, ~_ ~- -
+                const regex = /_|~_|~- -/g;
                 let header = 
                     tag.tagName === "Question" &&
-                    (tag.textContent.includes("_") || 
-                    tag.textContent.includes("~_")||
-                    tag.textContent.includes("~- -"));
+                    regex.test(tag.textContent);
                 return (!header);
             });
         }
