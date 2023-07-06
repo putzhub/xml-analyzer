@@ -93,7 +93,15 @@ function XMLAnalyzer({file}, {filter}){
             let elements = root.querySelectorAll("*");
             setXmltree(elements);
             //xmltrees not ready on first pass
-            count(elements);
+            //filter is manually hardcoded for now
+            count(elements, (tag)=>{
+                let header = 
+                    tag.tagName === "Question" &&
+                    (tag.textContent.includes("_") || 
+                    tag.textContent.includes("~_")||
+                    tag.textContent.includes("~- -"));
+                return (!header);
+            });
         }
 
         //Read the file once we've defined how

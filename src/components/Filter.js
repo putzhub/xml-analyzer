@@ -20,9 +20,10 @@ function FilterOptions({onChange}){
                 type="checkbox" 
                 id="headers" 
                 name="headers" 
-                value="Test" 
-                onChange={onChange}/>{" "}
-            <label htmlFor="headers">Remove Headers from Unique count</label>
+                value="In Progress"
+                onChange={onChange}
+                checked/>{" "}
+            <label htmlFor="headers">Remove Headers from Unique Question count</label>
         </div>
     );
 }

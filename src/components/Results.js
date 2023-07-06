@@ -31,6 +31,7 @@ function Results({files}){
     };
     render();
 
+    console.log(filter);
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>
