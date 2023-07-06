@@ -44,40 +44,39 @@ list-style: none;
 
 /*          COMPONENTS          */
 //Actual analysis of files
-function XMLAnalyzer({file}){
+function XMLAnalyzer({file}, {filter}){
     //Initialize states
     const [results, setResults ] = useState();
+    const [xmltree, setXmltree] = useState();
 
     //Helper functions
-    function count(tree) {
+    function count(tree=xmltree, filter=(f)=>f) {
         //compendium of results
         let counts = {};
         //categories to return
-        counts["unique"] = counts["total"] = {};
-        //helpers
+        counts["unique"] = {};
+        counts["total"] = {};
+        //helper object
         let unique_sets = {};
         
         //Count total of each type of elements
-        for(let element of tree) {
+        for(let element of Object.values(tree).filter(filter)) {
             //shorthand
             let tag = element.tagName;
-            //Totals
-            counts["total"][tag] = 
-                (counts["total"][tag] || 0) + 1;    //check if null
+            //---Totals---
+            counts["total"][tag] = (counts["total"][tag] || 0) + 1;
             
-            //Unique # of elements
+            //--- Unique elements ---
             if(unique_sets[tag] === undefined){
                 unique_sets[tag] = new Set();
             }
             unique_sets[tag].add(element.innerHTML.trim());
             //Keep the unique tally
-            counts["unique"][tag] = 
-                (unique_sets[tag].size || 0) + 1;
+            counts["unique"][tag] = (unique_sets[tag].size || 0) + 1;
         }
 
-        return counts;
+        setResults(counts);
     }
-
     //Read the actual file with useEffect, pass [file] so it only renders once
     useEffect( () => {
         //initialize the tools
@@ -90,18 +89,16 @@ function XMLAnalyzer({file}){
             const contents = event.target.result;
             const root = parser.parseFromString(contents, 'application/xml');
             
-            //Count the elements
-            //--APPLY FILTER HERE--
+            //Store the nodelist
             let elements = root.querySelectorAll("*");
-            let counts = count(elements);
-
-            //Store the results
-            setResults(counts);
+            setXmltree(elements);
+            //xmltrees not ready on first pass
+            count(elements);
         }
 
         //Read the file once we've defined how
         reader.readAsText(file);
-    }, [file]);
+    }, [file, filter]);
 
     //Return the JSX template
     return(
