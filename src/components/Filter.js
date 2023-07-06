@@ -22,7 +22,8 @@ function FilterOptions({onChange}){
                 name="headers" 
                 value="In Progress"
                 onChange={onChange}
-                checked/>{" "}
+                checked
+                disabled/>{" "}
             <label htmlFor="headers">Remove Headers from Unique Question count</label>
         </div>
     );
