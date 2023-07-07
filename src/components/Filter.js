@@ -3,6 +3,11 @@ import { styled } from "styled-components";
 
 /*          STYLES          */
 //Groups
+const FilterForm = styled.form`
+background-color: var(--background-output);
+border-radius: var(--default-border-radius);
+padding: var(--default-padding);
+`
 const FilterGroup = styled.ul`
 list-style:none;
 margin-top: 0;
@@ -30,8 +35,8 @@ margin-right: var(--default-margin);
 /*          COMPONENTS          */
 function Filter({onChange, filter}){
     return(
-        <form>
-            <h3 style={{marginBottom: "0"}}>Filter</h3>
+        <FilterForm>
+            <h3 style={{margin: "0"}}>Filter</h3>
             <div>
                 <label htmlFor="headers">Search Filter: </label>
                 <FilterSearch 
@@ -58,7 +63,7 @@ function Filter({onChange, filter}){
                 ))}
                 </FilterGroup>
             </div>
-        </form>
+        </FilterForm>
     );
 }
 
