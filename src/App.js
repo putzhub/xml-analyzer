@@ -1,6 +1,6 @@
 //import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled } from "styled-components";
 
 import FileUpload from "./components/FileUpload";
@@ -29,11 +29,14 @@ Filter details:
   -(Saved searches)
 * Allow saving user defined filters?
 * Info structure:
-  -tag
-  -text
+  -tags
+  -filter text
 */
 
 function App() {
+  useEffect(() => { 
+    document.title = "XML Analyzer"
+  });
   return (
     <div style={{textAlign: "center"}}>
       <AppHeader>

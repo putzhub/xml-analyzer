@@ -44,24 +44,23 @@ list-style: none;
 
 /*          COMPONENTS          */
 //Actual analysis of files
-function XMLAnalyzer({file, filter, setTagNames}){
+function XMLAnalyzer({file, filter}){
     //Initialize states
     const [results, setResults ] = useState();
     const [xmltree, setXmltree] = useState();
+    const [currentFile, setCurrentFile] = useState();
 
+    /*          HELPER FUNCTIONS            */
+    //Filter logic
     function apply_filter(element){
-        let regex, tag;
-
-        if(filter.regex){
-            regex = filter.regex.test(element.textContext);
+        if(filter.tags.includes(element.tagName)){
+            return filter.regex.test(element.textContent);
+        } else {
+            return true;
         }
-        if(filter.tags){
-            tag = !filter.tags.includes(element.tagName);
-        }
-
-        return (regex || tag);
     }
-    //Helper functions
+
+    //Calculate the stats
     function count(tree=xmltree) {
         //compendium of results
         let counts = {};
@@ -73,8 +72,7 @@ function XMLAnalyzer({file, filter, setTagNames}){
         
         //Count total of each type of elements
         //For all the value of each element test if it matches the filter
-        for(let element of Object.values(tree).filter((e) => 
-                                                apply_filter(e))) {
+        for(let element of Object.values(tree).filter((e) => apply_filter(e))) {
             //shorthand
             let tag = element.tagName;
 
@@ -85,44 +83,57 @@ function XMLAnalyzer({file, filter, setTagNames}){
             if(unique_sets[tag] === undefined){
                 unique_sets[tag] = new Set();
             }
-            unique_sets[tag].add(element.innerHTML.trim());
+            unique_sets[tag].add(element.textContent.trim());
             //Keep the unique tally
             counts["unique"][tag] = (unique_sets[tag].size || 0) + 1;
         }
  
-        setTagNames(Object.keys(counts['total']));
         setResults(counts);
     }
+
     //Read the actual file with useEffect, pass [file] so it only renders once
     useEffect( () => {
-        //initialize the tools
-        const parser = new DOMParser();
-        const reader = new FileReader();
-        
-        //Read the file contents & turn into XML trees
-        reader.onload = (event) => {
-            //Get contents from the reader passed readAsText(), then parse
-            const contents = event.target.result;
-            const root = parser.parseFromString(contents, 'application/xml');
+        if(file.name !== currentFile){
+            //initialize the tools
+            const parser = new DOMParser();
+            const reader = new FileReader();
+            setCurrentFile(file);
             
-            //Store the nodelist
-            let elements = root.querySelectorAll("*");
-            setXmltree(elements);
-            //xmltrees not ready on first pass, use elements first.
-            count(elements);
-        }
+            //Read the file contents & turn into XML trees
+            reader.onload = (event) => {
+                //Get contents from the reader passed readAsText(), then parse
+                const contents = event.target.result;
+                const root = parser.parseFromString(contents, 'application/xml');
+                //Store the nodelist
+                let elements = root.querySelectorAll("*");
 
-        //Read the file once we've defined how
-        reader.readAsText(file);
+                //get tags for filter to use
+                let tagNames = new Set();
+                for(let e of elements){
+                    tagNames.add(e.tagName);
+                }
+                filter.updateTagList(Array.from(tagNames));
+
+                //xmltrees not ready on first pass, use elements first.
+                count(elements);
+                //Save this so we don't have to read the file again for filters.
+                setXmltree(elements);
+            }
+
+            //Read the file once we've defined how
+            reader.readAsText(file);
+        } else {
+            count();
+        }
     }, [file, filter]);
 
-    //Return the JSX template
+    /*          JSX TEMPLATE            */
     return(
         <ResultEntry>
             <EntryHeader>{file.name}</EntryHeader>
             <EntryContent>
                 {/*If there's results then iterate through them*/}
-                {results && Object.keys(results.total).map((key, index) => {
+                {results && Object.keys(results.total).sort().map((key, index) => {
                     console.assert( //Relies on this assumption
                         results.total.keys === results.unique.keys, 
                         "results.total & results.unique - different keys detected");

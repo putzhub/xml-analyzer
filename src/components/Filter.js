@@ -2,7 +2,15 @@ import React from "react";
 import { styled } from "styled-components";
 
 /*          STYLES          */
-
+//Groups
+const FilterGroup = styled.ul`
+list-style:none;
+margin-top: 0;
+`
+const FilterItem = styled.li`
+display: inline;
+`
+//Inputs
 const FilterSearch = styled.input`
 width: 50%;
 font-size: 2rem;
@@ -12,7 +20,7 @@ font-size: 2rem;
 `
 const FilterLabel = styled.label`
 font-size: 1rem;
-margin: var(--default-margin);
+margin-right: var(--default-margin);
 `
 
 //TODO
@@ -20,7 +28,7 @@ margin: var(--default-margin);
 //Filter checkboxes that select which tags to apply the filter to
 
 /*          COMPONENTS          */
-function Filter({onChange, filter, tagNames}){
+function Filter({onChange, filter, tagList}){
     return(
         <form>
             <h3 style={{marginBottom: "0"}}>Filter</h3>
@@ -34,8 +42,10 @@ function Filter({onChange, filter, tagNames}){
                     onChange={onChange}
                     />{" "}
                 <br/>
-                {tagNames.map((tagName, i) => (
-                    <React.Fragment key={i} >
+                <h4 style={{fontSize: "1rem", marginBottom: "0"}}>Apply filter to these tags:</h4>
+                <FilterGroup>
+                {tagList.map((tagName, i) => (
+                    <FilterItem key={i} >
                     <FilterCheckbox
                         key={`checkbox${i}`}
                         type="checkbox" 
@@ -43,9 +53,10 @@ function Filter({onChange, filter, tagNames}){
                         name={tagName} 
                         value={tagName}
                         onChange={onChange} />
-                    <FilterLabel key={`label${i}`} htmlFor="key">{tagName}</FilterLabel>
-                    </React.Fragment>
+                    <FilterLabel key={`label${i}`} htmlFor={tagName}>{tagName}</FilterLabel>
+                    </FilterItem>
                 ))}
+                </FilterGroup>
             </div>
         </form>
     );

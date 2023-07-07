@@ -19,30 +19,21 @@ text-align: left;
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
-    const [ tagNames, setTagNames ] = useState([]);
+    const [ tagList, setTagList ] = useState([]);
+    //pass to XMLAnalyzer to get tags for filtering
+    function updateTagList(tagArray){
+        setTagList([...tagList, ...tagArray.filter((tag) => !tagList.includes(tag))]);
+    }
     const defaultFilter = {
         "text": "^(?!.*_|.*~- -|.*~Perform)",
         "regex": RegExp("^(?!.*_|.*~- -|.*~Perform)"),
-        "tags": [],
-        "tagNames": tagNames
+        "tags": [], //tags active for filtering
+        "tagList": tagList,
+        "updateTagList": updateTagList
     };
     //filter object with properties like tags, text, etc
     const [ filter, setFilter ] = useState(defaultFilter);
     
-    //Non-state variables
-    let processed_files = [];
-
-    function render() {
-        //Create list of Results
-        for(let i = 0; i < files.length; i++){
-            processed_files.push(< XMLAnalyzer 
-                                    key={i} 
-                                    file={files[i]} 
-                                    filter={filter}
-                                    setTagNames={setTagNames} />);
-        }
-    };
-
     function filterChange(event){
         switch(event.target.type) {
             case "checkbox": {
@@ -67,13 +58,20 @@ function Results({files}){
         }
     }
 
-    //Make sure it renders the first time
-    render();
-
+    /*          RENDER          */
+    //Non-state variables
+    let processed_files = [];
+    //Create list of Results
+    for(let i = 0; i < files.length; i++){
+        processed_files.push(< XMLAnalyzer 
+                                key={i} 
+                                file={files[i]} 
+                                filter={filter} />);
+    }
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>
-        <Filter onChange={filterChange} filter={filter} tagNames={tagNames}/>
+        <Filter onChange={filterChange} filter={filter} tagList={tagList}/>
         <ResultList>
             {processed_files}
         </ResultList>
