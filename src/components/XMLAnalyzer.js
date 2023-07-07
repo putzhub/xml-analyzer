@@ -44,8 +44,7 @@ list-style: none;
 
 /*          COMPONENTS          */
 //Actual analysis of files
-function XMLAnalyzer({file, filter}){
-    //debugger;
+function XMLAnalyzer({file, filter, updateTagList}){
     //Initialize states
     const [results, setResults ] = useState();
     const [nodeList, setNodeList] = useState();
@@ -69,14 +68,17 @@ function XMLAnalyzer({file, filter}){
             for(let e of elements){
                 tagNames.add(e.tagName);
             }
-            filter.updateTagList(Array.from(tagNames));
+            //Call setFilter on Results through a prop to update the TagList
+            updateTagList(f => ({...f, "tagList": 
+                                    [...f.tagList, 
+                                    ...Array.from(tagNames).filter((tag) => 
+                                    !f.tagList.includes(tag))]}));
         }
-
         //Read the file once we've defined how
         reader.readAsText(file);
-    }, [file]); //watching filter while changing it is breaking it
+    }, [file, updateTagList]); //watching filter while changing it is breaking it
 
-    //Count the file's contents when they're updated
+    //Count the file's contents whenever filter is update or a new file is loaded
     useEffect( () => {
         function apply_filter(element){
             if(filter.tags.includes(element.tagName)){
@@ -85,6 +87,7 @@ function XMLAnalyzer({file, filter}){
                 return true;
             }
         }
+        //Make sure nodelist isn't empty
         if(nodeList){
             //compendium of results
             let counts = {};
@@ -115,42 +118,6 @@ function XMLAnalyzer({file, filter}){
             setResults(counts);
         }
     }, [nodeList, filter]);
-    //Read the actual file with useEffect, pass [file] so it only renders once
-    /*
-    useEffect( () => {
-        if(file !== currentFile){
-            //initialize the tools
-            const parser = new DOMParser();
-            const reader = new FileReader();
-            setCurrentFile(file);
-            //Read the file contents & turn into XML trees
-            reader.onload = (event) => {
-                //Get contents from the reader passed readAsText(), then parse
-                const contents = event.target.result;
-                const root = parser.parseFromString(contents, 'application/xml');
-                //Store the nodelist
-                let elements = root.querySelectorAll("*");
-
-                //get tags for filter to use
-                let tagNames = new Set();
-                for(let e of elements){
-                    tagNames.add(e.tagName);
-                }
-                filter.updateTagList(Array.from(tagNames));
-
-                //nodeLists not ready on first pass, use elements first.
-                count(elements);
-                //Save this so we don't have to read the file again for filters.
-                setNodeList(elements);
-            }
-
-            //Read the file once we've defined how
-            reader.readAsText(file);
-        } else {
-            count();
-        }
-    }, [file, filter]); //watching filter while changing it is breaking it
-    */
 
     /*          JSX TEMPLATE            */
     return(

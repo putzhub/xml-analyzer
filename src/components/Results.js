@@ -19,11 +19,13 @@ text-align: left;
 function Results({files}){
     //Initialize State
     //so we can update tagList from XMLAnalyzer (and elsewhere if needed)
-    function updateTagList(tagArray){
-        setFilter({...filter, tagList: 
+    function updateTagList(setter_function){
+        /*setFilter({...filter, tagList: 
                         [...filter.tagList, 
-                        ...tagArray.filter((tag) => !filter.tagList.includes(tag))]})
+                        ...tagArray.filter((tag) => !filter.tagList.includes(tag))]})*/
         //setFilter({...filter, tagList: [ ...tagArray]})
+        debugger;
+        setFilter(setter_function);
     }
     //What filter objects hold
     const defaultFilter = {
@@ -75,7 +77,8 @@ function Results({files}){
         processed_files.push(< XMLAnalyzer 
                                 key={i} 
                                 file={files[i]} 
-                                filter={filter} />);
+                                filter={filter}
+                                updateTagList={setFilter} />);
     }
     return(
         <>
