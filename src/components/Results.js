@@ -19,7 +19,16 @@ text-align: left;
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
-    const [ filter, setFilter ] = useState(RegExp("^(?!.*_|.*~- -|.*~Perform)"));
+    const [ tagNames, setTagNames ] = useState([]);
+    const defaultFilter = {
+        "text": "^(?!.*_|.*~- -|.*~Perform)",
+        "regex": RegExp("^(?!.*_|.*~- -|.*~Perform)"),
+        "tags": [],
+        "tagNames": tagNames
+    };
+    //filter object with properties like tags, text, etc
+    const [ filter, setFilter ] = useState(defaultFilter);
+    
     //Non-state variables
     let processed_files = [];
 
@@ -29,12 +38,33 @@ function Results({files}){
             processed_files.push(< XMLAnalyzer 
                                     key={i} 
                                     file={files[i]} 
-                                    filter={filter} />);
+                                    filter={filter}
+                                    setTagNames={setTagNames} />);
         }
     };
+
     function filterChange(event){
-        setFilter(RegExp(event.target.value));
-        render();
+        switch(event.target.type) {
+            case "checkbox": {
+                if(!filter.tags.includes(event.target.value)){
+                    setFilter({...filter, tags: 
+                                            [...filter.tags, event.target.value]});
+                } else {
+                    setFilter({...filter, tags: filter.tags.filter(
+                                            (t) => t !== event.target.value)});
+                };
+                return;
+            }
+            case "text": {
+                setFilter({...filter,
+                    "text": event.target.value,
+                    "regex": RegExp(event.target.value)});
+                return;
+            }
+            default: {
+                return Error("unknown filter option");
+            }
+        }
     }
 
     //Make sure it renders the first time
@@ -43,7 +73,7 @@ function Results({files}){
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>
-        <Filter onChange={filterChange}/>
+        <Filter onChange={filterChange} filter={filter} tagNames={tagNames}/>
         <ResultList>
             {processed_files}
         </ResultList>

@@ -44,11 +44,23 @@ list-style: none;
 
 /*          COMPONENTS          */
 //Actual analysis of files
-function XMLAnalyzer({file, filter}){
+function XMLAnalyzer({file, filter, setTagNames}){
     //Initialize states
     const [results, setResults ] = useState();
     const [xmltree, setXmltree] = useState();
 
+    function apply_filter(element){
+        let regex, tag;
+
+        if(filter.regex){
+            regex = filter.regex.test(element.textContext);
+        }
+        if(filter.tags){
+            tag = !filter.tags.includes(element.tagName);
+        }
+
+        return (regex || tag);
+    }
     //Helper functions
     function count(tree=xmltree) {
         //compendium of results
@@ -62,7 +74,7 @@ function XMLAnalyzer({file, filter}){
         //Count total of each type of elements
         //For all the value of each element test if it matches the filter
         for(let element of Object.values(tree).filter((e) => 
-                                                filter.test(e.textContent))) {
+                                                apply_filter(e))) {
             //shorthand
             let tag = element.tagName;
 
@@ -77,7 +89,8 @@ function XMLAnalyzer({file, filter}){
             //Keep the unique tally
             counts["unique"][tag] = (unique_sets[tag].size || 0) + 1;
         }
-
+ 
+        setTagNames(Object.keys(counts['total']));
         setResults(counts);
     }
     //Read the actual file with useEffect, pass [file] so it only renders once

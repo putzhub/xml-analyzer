@@ -24,10 +24,13 @@ Establish workflow
 Filter details:
 * Filter should be string search or regex
 * Filters:
-  -Text search
-  -TagName
-  -Regex
+  -[Text search/Regex]
+  -[] TagName
+  -(Saved searches)
 * Allow saving user defined filters?
+* Info structure:
+  -tag
+  -text
 */
 
 function App() {
