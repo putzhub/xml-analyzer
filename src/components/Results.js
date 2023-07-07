@@ -15,7 +15,6 @@ text-align: left;
 
 // TODO
 // Implement filter as regex instead & pass filters by via through <Filter>
-
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
@@ -50,9 +49,17 @@ function Results({files}){
                 return;
             }
             case "text": {
+                try{
                 setFilter({...filter,
                     "text": event.target.value,
                     "regex": RegExp(event.target.value)});
+                }catch(e){
+                    if(e.name === "SyntaxError"){
+                        setFilter({...filter,
+                            "text": event.target.value,
+                            "regex": RegExp()});
+                    }
+                }
                 return;
             }
             default: {

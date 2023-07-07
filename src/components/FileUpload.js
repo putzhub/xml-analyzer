@@ -56,7 +56,6 @@ function Button({children, toggleText=children, onClick}){
 function FileUpload() {
     //Hold our and manipulate selectedFiles as State
     const [selectedFiles, setSelectedFiles] = useState([]);
-  
     //Template
     return(
       <>

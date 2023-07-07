@@ -32,7 +32,6 @@ Filter details:
   -tags
   -filter text
 */
-
 function App() {
   useEffect(() => { 
     document.title = "XML Analyzer"

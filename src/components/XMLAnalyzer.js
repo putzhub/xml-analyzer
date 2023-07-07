@@ -45,60 +45,84 @@ list-style: none;
 /*          COMPONENTS          */
 //Actual analysis of files
 function XMLAnalyzer({file, filter}){
+    //debugger;
     //Initialize states
     const [results, setResults ] = useState();
-    const [xmltree, setXmltree] = useState();
-    const [currentFile, setCurrentFile] = useState();
+    const [nodeList, setNodeList] = useState();
 
-    /*          HELPER FUNCTIONS            */
-    //Filter logic
-    function apply_filter(element){
-        if(filter.tags.includes(element.tagName)){
-            return filter.regex.test(element.textContent);
-        } else {
-            return true;
-        }
-    }
-
-    //Calculate the stats
-    function count(tree=xmltree) {
-        //compendium of results
-        let counts = {};
-        //categories to return
-        counts["unique"] = {};
-        counts["total"] = {};
-        //helper object
-        let unique_sets = {};
-        
-        //Count total of each type of elements
-        //For all the value of each element test if it matches the filter
-        for(let element of Object.values(tree).filter((e) => apply_filter(e))) {
-            //shorthand
-            let tag = element.tagName;
-
-            //---Totals---
-            counts["total"][tag] = (counts["total"][tag] || 0) + 1;
+    //Load the file & Extract NodeList when file changes
+    useEffect( () => {
+        //initialize the tools
+        const parser = new DOMParser();
+        const reader = new FileReader();
+        //Read the file contents & turn into XML trees
+        reader.onload = (event) => {
+            //Get contents from the reader passed readAsText(), then parse
+            const contents = event.target.result;
+            const root = parser.parseFromString(contents, 'application/xml');
+            //Store the nodelist
+            let elements = root.querySelectorAll("*");
+            setNodeList(elements);
             
-            //--- Unique elements ---
-            if(unique_sets[tag] === undefined){
-                unique_sets[tag] = new Set();
+            //get tags for filter to use
+            let tagNames = new Set();
+            for(let e of elements){
+                tagNames.add(e.tagName);
             }
-            unique_sets[tag].add(element.textContent.trim());
-            //Keep the unique tally
-            counts["unique"][tag] = (unique_sets[tag].size || 0) + 1;
+            filter.updateTagList(Array.from(tagNames));
         }
- 
-        setResults(counts);
-    }
 
+        //Read the file once we've defined how
+        reader.readAsText(file);
+    }, [file]); //watching filter while changing it is breaking it
+
+    //Count the file's contents when they're updated
+    useEffect( () => {
+        function apply_filter(element){
+            if(filter.tags.includes(element.tagName)){
+                return filter.regex.test(element.textContent);
+            } else {
+                return true;
+            }
+        }
+        if(nodeList){
+            //compendium of results
+            let counts = {};
+            //categories to return
+            counts["unique"] = {};
+            counts["total"] = {};
+            //helper object
+            let unique_sets = {};
+            
+            //Count total of each type of elements
+            //For all the value of each element test if it matches the filter
+            for(let element of Object.values(nodeList).filter((e) => apply_filter(e))) {
+                //shorthand
+                let tag = element.tagName;
+
+                //---Totals---
+                counts["total"][tag] = (counts["total"][tag] || 0) + 1;
+                
+                //--- Unique elements ---
+                if(unique_sets[tag] === undefined){
+                    unique_sets[tag] = new Set();
+                }
+                unique_sets[tag].add(element.textContent.trim());
+                //Keep the unique tally
+                counts["unique"][tag] = (unique_sets[tag].size || 0) + 1;
+            }
+    
+            setResults(counts);
+        }
+    }, [nodeList, filter]);
     //Read the actual file with useEffect, pass [file] so it only renders once
+    /*
     useEffect( () => {
         if(file !== currentFile){
             //initialize the tools
             const parser = new DOMParser();
             const reader = new FileReader();
             setCurrentFile(file);
-            
             //Read the file contents & turn into XML trees
             reader.onload = (event) => {
                 //Get contents from the reader passed readAsText(), then parse
@@ -114,10 +138,10 @@ function XMLAnalyzer({file, filter}){
                 }
                 filter.updateTagList(Array.from(tagNames));
 
-                //xmltrees not ready on first pass, use elements first.
+                //nodeLists not ready on first pass, use elements first.
                 count(elements);
                 //Save this so we don't have to read the file again for filters.
-                setXmltree(elements);
+                setNodeList(elements);
             }
 
             //Read the file once we've defined how
@@ -125,7 +149,8 @@ function XMLAnalyzer({file, filter}){
         } else {
             count();
         }
-    }, [file, filter]);
+    }, [file, filter]); //watching filter while changing it is breaking it
+    */
 
     /*          JSX TEMPLATE            */
     return(
