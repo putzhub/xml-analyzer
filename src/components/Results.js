@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 
 import XMLAnalyzer from "./XMLAnalyzer";
@@ -18,22 +18,14 @@ text-align: left;
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
-    //so we can update tagList from XMLAnalyzer (and elsewhere if needed)
-    function updateTagList(setter_function){
-        /*setFilter({...filter, tagList: 
-                        [...filter.tagList, 
-                        ...tagArray.filter((tag) => !filter.tagList.includes(tag))]})*/
-        //setFilter({...filter, tagList: [ ...tagArray]})
-        debugger;
-        setFilter(setter_function);
-    }
     //What filter objects hold
     const defaultFilter = {
+        "invert": false,
         "text": "^(?!.*_|.*~- -|.*~Perform)",
         "regex": RegExp("^(?!.*_|.*~- -|.*~Perform)"),
         "tags": [], //tags active for filtering
         "tagList": [],
-        "updateTagList": updateTagList
+        //"updateTagList": updateTagList
     };
     //filter object with properties like tags, text, etc
     const [ filter, setFilter ] = useState(defaultFilter);
@@ -41,6 +33,7 @@ function Results({files}){
     function filterChange(event){
         switch(event.target.type) {
             case "checkbox": {
+                //Toggle the tag for filtering
                 if(!filter.tags.includes(event.target.value)){
                     setFilter({...filter, tags: 
                                             [...filter.tags, event.target.value]});
@@ -51,10 +44,11 @@ function Results({files}){
                 return;
             }
             case "text": {
+                //Turn the filter bar into regex, or disable if broken
                 try{
-                setFilter({...filter,
-                    "text": event.target.value,
-                    "regex": RegExp(event.target.value)});
+                    setFilter({...filter,
+                        "text": event.target.value,
+                        "regex": RegExp(event.target.value)});
                 }catch(e){
                     if(e.name === "SyntaxError"){
                         setFilter({...filter,
@@ -80,6 +74,11 @@ function Results({files}){
                                 filter={filter}
                                 updateTagList={setFilter} />);
     }
+
+    useEffect(() => (
+        files.onload = setFilter((f) => ({...f, tagList:[]}))
+    ), [files]);
+
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>

@@ -11,17 +11,18 @@ padding: var(--default-padding);
 const FilterGroup = styled.ul`
 list-style:none;
 margin-top: 0;
+text-align: left;
 `
 const FilterItem = styled.li`
-display: inline;
+display: inline-block;
 `
 //Inputs
 const FilterSearch = styled.input`
 width: 50%;
-font-size: 2rem;
+font-size: 1.6rem;
 `
 const FilterCheckbox = styled.input`
-font-size: 2rem;
+font-size: 1.6rem;
 `
 const FilterLabel = styled.label`
 font-size: 1rem;
@@ -47,8 +48,8 @@ function Filter({onChange, filter}){
                     onChange={onChange}
                     />{" "}
                 <br/>
-                <h4 style={{fontSize: "1rem", marginBottom: "0"}}>Apply filter to these tags:</h4>
                 <FilterGroup>
+                <h4 style={{fontSize: "1rem", marginBottom: "0"}}>Apply filter to these tags:</h4>
                 {filter.tagList.map((tagName, i) => (
                     <FilterItem key={i} >
                     <FilterCheckbox

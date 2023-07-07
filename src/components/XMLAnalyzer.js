@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 /*          STYLE           */
 //Template
 const TemplateHeader = `
+max-width: 100%;
 padding: var(--default-padding);
 margin: 0;
 font-family: monospace;
@@ -18,27 +19,36 @@ padding: var(--default-padding);
 background-color: var(--background-output);
 border-radius: 8px;
 `;
-const EntryHeader = styled.h3`
+const FileHeader = styled.h3`
 ${TemplateHeader}
 background-color: var(--color-contrast);
 `
-const EntryContent = styled.ul`
+const FileContent = styled.div`
+display: grid;
+grid-template-columns: auto auto;
 list-style: none; 
-line-height: 1.8;
+line-height: 1.5;
 `
 
 //Tag
-const TagEntry = styled.li`
-margin-top: var(--default-margin);
+const TagEntry = styled.div`
+max-height: 4.5rem;
 `
 const TagHeader = styled.h4`
 ${TemplateHeader}
+display: inline-block;
+margin: var(--default-margin);
+margin-bottom: 0;
+padding: 0;
 background-color: var(--color-output);
 padding: .5rem;
+max-height: 2rem;
 `
 const TagContent = styled.ul`
+margin: var(--default-margin) 0;
+padding: 0;
 display: flex;
-justify-content: space-between;
+justify-content: space-evenly;
 list-style: none;
 `
 
@@ -68,11 +78,13 @@ function XMLAnalyzer({file, filter, updateTagList}){
             for(let e of elements){
                 tagNames.add(e.tagName);
             }
+            //convert for setter
+            tagNames = Array.from(tagNames);
             //Call setFilter on Results through a prop to update the TagList
             updateTagList(f => ({...f, "tagList": 
                                     [...f.tagList, 
-                                    ...Array.from(tagNames).filter((tag) => 
-                                    !f.tagList.includes(tag))]}));
+                                    ...tagNames.filter((tag) => !f.tagList.includes(tag))]
+                                }));
         }
         //Read the file once we've defined how
         reader.readAsText(file);
@@ -122,24 +134,26 @@ function XMLAnalyzer({file, filter, updateTagList}){
     /*          JSX TEMPLATE            */
     return(
         <ResultEntry>
-            <EntryHeader>{file.name}</EntryHeader>
-            <EntryContent>
+            <FileHeader>{file.name}</FileHeader>
+            <FileContent>
                 {/*If there's results then iterate through them*/}
                 {results && Object.keys(results.total).sort().map((key, index) => {
                     console.assert( //Relies on this assumption
                         results.total.keys === results.unique.keys, 
                         "results.total & results.unique - different keys detected");
                     return(
-                        <TagEntry key={index}>
-                            <TagHeader>{key}</TagHeader> 
+                        <React.Fragment key={index}>
+                        <TagHeader>{key}</TagHeader> 
+                        <TagEntry>
                             <TagContent>
-                                <li>Total: {results.total[key]}{' '}</li>
-                                <li><em>Unique: {results.unique[key]}{' '}</em></li>
+                                <li><strong>Total:</strong><br/> {results.total[key]}{' '}</li>
+                                <li><em>Unique:<br/> {results.unique[key]}{' '}</em></li>
                             </TagContent>
                         </TagEntry>
+                        </React.Fragment>
                     );
                 })}
-            </EntryContent>
+            </FileContent>
         </ResultEntry>
     );
 }
