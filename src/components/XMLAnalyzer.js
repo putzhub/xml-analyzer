@@ -112,10 +112,7 @@ function XMLAnalyzer({file, filter}){
                 for(let e of elements){
                     tagNames.add(e.tagName);
                 }
-                filter.updateTagList({
-                    "file": file.name,
-                    "tagList": Array.from(tagNames)
-                });
+                filter.updateTagList(Array.from(tagNames));
 
                 //xmltrees not ready on first pass, use elements first.
                 count(elements);

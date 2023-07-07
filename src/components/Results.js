@@ -19,14 +19,14 @@ text-align: left;
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
-    //const [ tagList, setTagList ] = useState([]);
-    //pass to XMLAnalyzer to get tags for filtering
+    //so we can update tagList from XMLAnalyzer (and elsewhere if needed)
     function updateTagList(tagArray){
-        //setTagList([...tagList, ...tagArray.tagList.filter((tag) => !tagList.includes(tag))]);
-        setFilter({...filter, "tagList": 
+        setFilter({...filter, tagList: 
                         [...filter.tagList, 
-                        ...tagArray.tagList.filter((tag) => !filter.tagList.includes(tag))]})
+                        ...tagArray.filter((tag) => !filter.tagList.includes(tag))]})
+        //setFilter({...filter, tagList: [ ...tagArray]})
     }
+    //What filter objects hold
     const defaultFilter = {
         "text": "^(?!.*_|.*~- -|.*~Perform)",
         "regex": RegExp("^(?!.*_|.*~- -|.*~Perform)"),
@@ -62,9 +62,8 @@ function Results({files}){
     }
 
     /*          RENDER          */
-    //Non-state variables
-    let processed_files = [];
     //Create list of Results
+    let processed_files = [];
     for(let i = 0; i < files.length; i++){
         processed_files.push(< XMLAnalyzer 
                                 key={i} 
