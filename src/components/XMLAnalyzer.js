@@ -93,7 +93,7 @@ function XMLAnalyzer({file, filter}){
 
     //Read the actual file with useEffect, pass [file] so it only renders once
     useEffect( () => {
-        if(file.name !== currentFile){
+        if(file !== currentFile){
             //initialize the tools
             const parser = new DOMParser();
             const reader = new FileReader();
@@ -112,7 +112,10 @@ function XMLAnalyzer({file, filter}){
                 for(let e of elements){
                     tagNames.add(e.tagName);
                 }
-                filter.updateTagList(Array.from(tagNames));
+                filter.updateTagList({
+                    "file": file.name,
+                    "tagList": Array.from(tagNames)
+                });
 
                 //xmltrees not ready on first pass, use elements first.
                 count(elements);

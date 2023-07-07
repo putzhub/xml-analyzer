@@ -28,7 +28,7 @@ margin-right: var(--default-margin);
 //Filter checkboxes that select which tags to apply the filter to
 
 /*          COMPONENTS          */
-function Filter({onChange, filter, tagList}){
+function Filter({onChange, filter}){
     return(
         <form>
             <h3 style={{marginBottom: "0"}}>Filter</h3>
@@ -44,7 +44,7 @@ function Filter({onChange, filter, tagList}){
                 <br/>
                 <h4 style={{fontSize: "1rem", marginBottom: "0"}}>Apply filter to these tags:</h4>
                 <FilterGroup>
-                {tagList.map((tagName, i) => (
+                {filter.tagList.map((tagName, i) => (
                     <FilterItem key={i} >
                     <FilterCheckbox
                         key={`checkbox${i}`}

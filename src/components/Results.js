@@ -19,16 +19,19 @@ text-align: left;
 //Wrapper & default export hook to process the xml file contents
 function Results({files}){
     //Initialize State
-    const [ tagList, setTagList ] = useState([]);
+    //const [ tagList, setTagList ] = useState([]);
     //pass to XMLAnalyzer to get tags for filtering
     function updateTagList(tagArray){
-        setTagList([...tagList, ...tagArray.filter((tag) => !tagList.includes(tag))]);
+        //setTagList([...tagList, ...tagArray.tagList.filter((tag) => !tagList.includes(tag))]);
+        setFilter({...filter, "tagList": 
+                        [...filter.tagList, 
+                        ...tagArray.tagList.filter((tag) => !filter.tagList.includes(tag))]})
     }
     const defaultFilter = {
         "text": "^(?!.*_|.*~- -|.*~Perform)",
         "regex": RegExp("^(?!.*_|.*~- -|.*~Perform)"),
         "tags": [], //tags active for filtering
-        "tagList": tagList,
+        "tagList": [],
         "updateTagList": updateTagList
     };
     //filter object with properties like tags, text, etc
@@ -71,7 +74,7 @@ function Results({files}){
     return(
         <>
         <h2 style={{margin: "0"}}>Results</h2>
-        <Filter onChange={filterChange} filter={filter} tagList={tagList}/>
+        <Filter onChange={filterChange} filter={filter}/>
         <ResultList>
             {processed_files}
         </ResultList>
