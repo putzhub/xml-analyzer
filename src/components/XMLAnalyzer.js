@@ -124,7 +124,7 @@ function XMLAnalyzer({file, filter, updateTagList}){
                 }
                 unique_sets[tag].add(element.textContent.trim());
                 //Keep the unique tally
-                counts["unique"][tag] = (unique_sets[tag].size || 0) + 1;
+                counts["unique"][tag] = (unique_sets[tag].size || 0);
             }
     
             setResults(counts);
