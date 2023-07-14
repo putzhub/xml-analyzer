@@ -10,6 +10,10 @@
   --default-border-radius: 8px;
 }
 
+html{
+  max-width: 100%;
+}
+
 body{
   /* layout */
   width: 98vw;
@@ -27,4 +31,5 @@ body{
 input[type="file"], button{
   font-size: 2rem;
   padding: 1rem;
+  max-width: 80vw;
 }
